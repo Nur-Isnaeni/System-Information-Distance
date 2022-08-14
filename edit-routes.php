@@ -29,33 +29,54 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Streets</h1>
+        <h1 class="h3 mb-2 text-gray-800">Routes</h1>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                Streets Edit
+                Routes Edit
             </div>
             <div class="card-body">
-                <?php include('connection.php'); ?>
-
-                <?php
-                $id_street = $_GET['id'];
-                $query = mysqli_query($connect, "SELECT * from street where id='$id_street'");
-                $result = mysqli_fetch_array($query);
+                <?php include 'connection.php';
+                $id = $_GET['id'];
+                $sql = mysqli_query($connect, "SELECT * FROM route WHERE id='$id'");
+                $result = mysqli_fetch_all($sql, MYSQLI_ASSOC)[0];
                 ?>
-                <form action="edit-street-update.php" method="post">
-                    <input type="hidden" name="id" value="<?php echo $result['id'] ?>">
-                    <div class="mb-3">
-                        <label class="form-label">District Name</label>
-                        <input class="form-control" name="district_name" type="text" value="<?= $result['district_name'] ?>">
+                <form action="add-routes-update.php" method="post">
+                    <input type="hidden" name="id" value="<?= $result['id'] ?>">
+                    <div class="form-group">
+                        <label>Route Start</label>
+                        <select name="rute_start" class="form-control" required>
+                            <?php
+                            include 'connection.php';
+                            $query = mysqli_query($connect, 'SELECT * FROM street');
+                            while ($data = mysqli_fetch_array($query)) { ?>
+                                <option <?= $result['street_id'] == $data['id'] ? 'selected' : '' ?> value="<?= $data['id'] ?>"><?= $data['district_name'] ?> - <?= $data['address'] ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Address</label>
-                        <textarea name="address" rows="3" class="form-control"><?= $result['address'] ?></textarea>
+                    <div class="form-group">
+                        <label>Route Finish</label>
+                        <select name="rute_finish" class="form-control" required>
+                        <option disabled selected value="">Choose One!</option>
+                        <?php
+                            include 'connection.php';
+                            $district_name = $result['district'];
+                            $district_address = $result['district_address'];
+                            $street = mysqli_query($connect, "SELECT * FROM street WHERE district_name='$district_name' AND address='$district_address'");
+                            $result_street = mysqli_fetch_all($street, MYSQLI_ASSOC)[0];
+                            $query = mysqli_query($connect, 'SELECT * FROM street');
+                            while ($data = mysqli_fetch_array($query)) { ?>
+                                <option <?= $result_street['id'] == $data['id'] ? 'selected' : '' ?> value="<?= $data['id'] ?>"><?= $data['district_name'] ?> - <?= $data['address'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Distance Price</label>
+                        <input type="number" name="price" class="form-control" value ="<?= $result['price'] ?>" placeholder="Distance Price" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="street.php" class="btn btn-danger">Back</a>
+                    <a href="routes.php" class="btn btn-danger">Back</a>
                 </form>
             </div>
         </div>

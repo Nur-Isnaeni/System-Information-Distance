@@ -40,7 +40,8 @@
                 <form action="add-routes-insert.php" method="post">
                     <div class="form-group">
                         <label>Route Start</label>
-                        <select name="street_id" class="form-control">
+                        <select name="rute_start" class="form-control" required>
+                            <option disabled selected value="">Choose One!</option>
                             <?php
                             include 'connection.php';
                             $query = mysqli_query($connect, 'SELECT * FROM street');
@@ -51,7 +52,8 @@
                     </div>
                     <div class="form-group">
                         <label>Route Finish</label>
-                        <select name="street_name" class="form-control">
+                        <select name="rute_finish" class="form-control" required>
+                        <option disabled selected value="">Choose One!</option>
                         <?php
                             include 'connection.php';
                             $query = mysqli_query($connect, 'SELECT * FROM street');
@@ -59,15 +61,10 @@
                                 <option value="<?= $data['id'] ?>"><?= $data['district_name'] ?> - <?= $data['address'] ?></option>
                             <?php } ?>
                         </select>
-                        <!-- <input type="text" name="district" class="form-control" placeholder="District Route Finish"> -->
                     </div>
                     <div class="form-group">
-                        <label>Price</label>
-                        <textarea name="" rows="3" class="form-control" placeholder="Address Route Finish"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Price</label>
-                        <input type="number" name="price" class="form-control" placeholder="Price">
+                        <label>Distance Price</label>
+                        <input type="number" name="price" class="form-control" placeholder="Distance Price" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
                     <a href="routes.php" class="btn btn-danger">Back</a>

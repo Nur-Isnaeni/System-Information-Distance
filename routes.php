@@ -66,8 +66,8 @@
                                     <td><?= $data['district'] ?> - <?= $data['district_address'] ?></td>
                                     <td><?= $data['price'] ?></td>
                                     <td>
-                                        <a href="edit-street.php?id=<?php echo $data['id'] ?>" class="btn btn-warning ">edit</a>
-                                        <a href="delete-street.php?id=<?php echo $data['id'] ?>" class="btn btn-danger ">delete</a>
+                                        <a href="edit-routes.php?id=<?php echo $data['id'] ?>" class="btn btn-warning ">edit</a>
+                                        <a href="delete-routes.php?id=<?php echo $data['id'] ?>" onclick="return confirm('Are You Sure ?')" class="btn btn-danger ">delete</a>
                                     </td>
                                 </tr>
                             <?php } ?>
