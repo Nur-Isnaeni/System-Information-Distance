@@ -44,6 +44,18 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Routes</span></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="cari-routes.php">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Cari Routes</span></a>
+        </li>
+        <?php if ($_SESSION['accses_level'] == 'admin') : ?>
+            <li class="nav-item">
+                <a class="nav-link" href="users.php">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Users</span></a>
+            </li>
+        <?php endif; ?>
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -66,11 +78,11 @@
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                 <!-- Sidebar Toggle (Topbar) -->
-                <form class="form-inline">
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </form>
+                <!-- <form class="form-inline"> -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <!-- </form> -->
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -105,7 +117,7 @@
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <a class="dropdown-item" href="logout.php" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Logout
                             </a>

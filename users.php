@@ -1,6 +1,8 @@
 <?php
 session_start();
-if (!isset($_SESSION['email'])) {
+$isAdmin = $_SESSION['accses_level'] == 'admin';
+if (!isset($_SESSION['email']) || !$isAdmin) {
+    session_destroy();
     header("location: login.php");
 }
 ?>
@@ -15,7 +17,7 @@ if (!isset($_SESSION['email'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Distance</title>
+    <title>Users</title>
 
     <!-- Custom fonts for this template -->
     <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -36,48 +38,62 @@ if (!isset($_SESSION['email'])) {
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Routes</h1>
+        <h1 class="h3 mb-2 text-gray-800">Users</h1>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                Routes Add
+                <a href="add-users.php" class="btn btn-primary">Add Users</a>
             </div>
             <div class="card-body">
-                <form action="add-routes-insert.php" method="post">
-                    <div class="form-group">
-                        <label>Route Start</label>
-                        <select name="rute_start" class="form-control" required>
-                            <option disabled selected value="">Choose One!</option>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Accses Level</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                            include 'connection.php';
-                            $query = mysqli_query($connect, 'SELECT * FROM street');
-                            while ($data = mysqli_fetch_array($query)) { ?>
-                                <option value="<?= $data['id'] ?>"><?= $data['district_name'] ?> - <?= $data['address'] ?></option>
+                            include "connection.php";
+                            $sql = 'SELECT * FROM users';
+                            $query = mysqli_query($connect, $sql);
+                            $results = mysqli_fetch_all($query, MYSQLI_ASSOC);
+                            $nomor = 1;
+                            foreach ($results as $data) {
+                            ?>
+                                <tr>
+
+                                    <td><?= $nomor++ ?></td>
+                                    <?php
+                                    if ($data['photo']) { ?>
+                                        <td><img src="image/<?= $data['photo'] ?>" height="40" width="40" alt=""></td>
+                                    <?php
+                                    } else { ?>
+                                        <td><img src="assets/img/user.png" height="40" width="40" alt=""></td>
+                                    <?php } ?>
+                                    <td><?= $data['name'] ?></td>
+                                    <td><?= $data['email'] ?></td>
+                                    <td><?= $data['phone'] ?></td>
+                                    <td><?= $data['accses_level'] ?></td>
+                                    <td>
+                                        <a href="edit-users.php?id=<?php echo $data['id'] ?>" class="btn btn-warning ">edit</a>
+                                        <a href="delete-users.php?id=<?php echo $data['id'] ?>" onclick="return confirm('Are You Sure ?')" class="btn btn-danger ">delete</a>
+                                    </td>
+                                </tr>
                             <?php } ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Route Finish</label>
-                        <select name="rute_finish" class="form-control" required>
-                        <option disabled selected value="">Choose One!</option>
-                        <?php
-                            include 'connection.php';
-                            $query = mysqli_query($connect, 'SELECT * FROM street');
-                            while ($data = mysqli_fetch_array($query)) { ?>
-                                <option value="<?= $data['id'] ?>"><?= $data['district_name'] ?> - <?= $data['address'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Distance Price</label>
-                        <input type="number" name="price" class="form-control" placeholder="Distance Price" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="routes.php" class="btn btn-danger">Back</a>
-                </form>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
     <!-- /.container-fluid -->
 
@@ -140,7 +156,7 @@ if (!isset($_SESSION['email'])) {
 
     <!-- Page level custom scripts -->
     <script src="assets/js/demo/datatables-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
 </body>
 

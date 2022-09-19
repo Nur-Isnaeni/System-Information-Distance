@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (!isset($_SESSION['email'])) {
+    header("location: login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +26,7 @@
 
     <!-- Custom styles for this page -->
     <link href="assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
 
@@ -33,41 +40,72 @@
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <a href="add-street.php" class="btn btn-primary">Add Streets</a>
-            </div>
+            <?php if ($_SESSION['accses_level'] == 'admin') : ?>
+                <div class="card-header py-3">
+                    <a href="add-street.php" class="btn btn-primary">Add Streets</a>
+                </div>
+            <?php endif; ?>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>District Name</th>
-                                <th>Address</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            include "connection.php";
-                            $sql = 'SELECT * FROM street';
-                            $query = mysqli_query($connect, $sql);
-                            $results = mysqli_fetch_all($query, MYSQLI_ASSOC);
-                            $nomor = 1;
-                            foreach ($results as $data) {
-                            ?>
+                    <?php if ($_SESSION['accses_level'] == 'users') : ?>
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
                                 <tr>
-                                    <td><?= $nomor++ ?></td>
-                                    <td><?= $data['district_name'] ?></td>
-                                    <td><?= $data['address'] ?></td>
-                                    <td>
-                                        <a href="edit-street.php?id=<?php echo $data['id'] ?>" class="btn btn-warning ">edit</a>
-                                        <a href="delete-street.php?id=<?php echo $data['id'] ?>" onclick="return confirm('Are You Sure ?')" class="btn btn-danger ">delete</a>
-                                    </td>
+                                    <th>No.</th>
+                                    <th>District Name</th>
+                                    <th>Address</th>
                                 </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php
+                                include "connection.php";
+                                $sql = 'SELECT * FROM street';
+                                $query = mysqli_query($connect, $sql);
+                                $results = mysqli_fetch_all($query, MYSQLI_ASSOC);
+                                $nomor = 1;
+                                foreach ($results as $data) {
+                                ?>
+                                    <tr>
+                                        <td><?= $nomor++ ?></td>
+                                        <td><?= $data['district_name'] ?></td>
+                                        <td><?= $data['address'] ?></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['accses_level'] == 'admin') : ?>
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>District Name</th>
+                                    <th>Address</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                include "connection.php";
+                                $sql = 'SELECT * FROM street';
+                                $query = mysqli_query($connect, $sql);
+                                $results = mysqli_fetch_all($query, MYSQLI_ASSOC);
+                                $nomor = 1;
+                                foreach ($results as $data) {
+                                ?>
+                                    <tr>
+                                        <td><?= $nomor++ ?></td>
+                                        <td><?= $data['district_name'] ?></td>
+                                        <td><?= $data['address'] ?></td>
+                                        <td>
+                                            <a href="edit-street.php?id=<?php echo $data['id'] ?>" class="btn btn-warning ">edit</a>
+                                            <a href="delete-street.php?id=<?php echo $data['id'] ?>" onclick="return confirm('Are You Sure ?')" class="btn btn-danger ">delete</a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -112,7 +150,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="assets/login.html">Logout</a>
+                    <a class="btn btn-primary" href="logout.php">Logout</a>
                 </div>
             </div>
         </div>
@@ -134,7 +172,7 @@
 
     <!-- Page level custom scripts -->
     <script src="assets/js/demo/datatables-demo.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>
 
 </html>

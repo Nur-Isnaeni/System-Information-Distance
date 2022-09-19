@@ -36,50 +36,64 @@ if (!isset($_SESSION['email'])) {
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Routes</h1>
+        <h1 class="h3 mb-2 text-gray-800">Users</h1>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                Routes Add
+                Users Edit
             </div>
             <div class="card-body">
-                <form action="add-routes-insert.php" method="post">
-                    <div class="form-group">
-                        <label>Route Start</label>
-                        <select name="rute_start" class="form-control" required>
-                            <option disabled selected value="">Choose One!</option>
-                            <?php
-                            include 'connection.php';
-                            $query = mysqli_query($connect, 'SELECT * FROM street');
-                            while ($data = mysqli_fetch_array($query)) { ?>
-                                <option value="<?= $data['id'] ?>"><?= $data['district_name'] ?> - <?= $data['address'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Route Finish</label>
-                        <select name="rute_finish" class="form-control" required>
-                        <option disabled selected value="">Choose One!</option>
-                        <?php
-                            include 'connection.php';
-                            $query = mysqli_query($connect, 'SELECT * FROM street');
-                            while ($data = mysqli_fetch_array($query)) { ?>
-                                <option value="<?= $data['id'] ?>"><?= $data['district_name'] ?> - <?= $data['address'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Distance Price</label>
-                        <input type="number" name="price" class="form-control" placeholder="Distance Price" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="routes.php" class="btn btn-danger">Back</a>
-                </form>
+                <?php include('connection.php'); ?>
+
+                <?php
+                $id = $_GET['id'];
+                $query = mysqli_query($connect, "SELECT * FROM users WHERE id= '$id'");
+                $result = mysqli_fetch_all($query, MYSQLI_ASSOC)[0];
+                ?>
+                <div class="card-body">
+                    <form action="edit-users-update.php" method="post" autocomplete="off" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="<?= $result['id'] ?>">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="id" value="<?= $result['name'] ?>" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" name="email" id="email" value="<?= $result['email'] ?>" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="text" name="phone" id="phone" value="<?= $result['phone'] ?>" class="form-control" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" id="password" class="form-control">
+                            <input type="checkbox" id="ShowPass"> Show Password
+                        </div>
+                        <div class="form-group">
+                            <label>Accses Level</label>
+                            <select name="accses_level" id="accses_level" class="form-control" required>
+                                <option <?= $result['accses_level'] == 'admin' ? 'selected' : '' ?> value="admin">Admin</option>
+                                <option <?= $result['accses_level'] == 'user' ? 'selected' : '' ?> value="user">User</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Photo</label><br>
+                            <input type="hidden" name="old_photo">
+                            <input type="file" name="photo" accept="image/*" id="photo" value="<?= $result['photo']; ?>">
+
+                        </div>
+                        <div class="form-group text-center" style="margin-bottom:0%;">
+                            <img style="width: 30%;border: 0px solid; border: radius 10px;" id="viewer" src="image/<?= $result['photo']; ?>" alt="" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="users.php" class="btn btn-danger">Back</a>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
 
     </div>
     <!-- End of Main Content -->
@@ -141,6 +155,21 @@ if (!isset($_SESSION['email'])) {
     <!-- Page level custom scripts -->
     <script src="assets/js/demo/datatables-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#viewer').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+
+        }
+        $("#photo").change(function() {
+            readURL(this);
+        });
+    </script>
 
 </body>
 
