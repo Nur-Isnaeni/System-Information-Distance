@@ -47,7 +47,7 @@ if (!isset($_SESSION['email'])) {
                 <form action="add-routes-insert.php" method="post">
                     <div class="form-group">
                         <label>Route Start</label>
-                        <select name="rute_start" class="form-control" required>
+                        <select name="rute_start" class="form-control" id="rute_start" required>
                             <option disabled selected value="">Choose One!</option>
                             <?php
                             include 'connection.php';
@@ -59,9 +59,9 @@ if (!isset($_SESSION['email'])) {
                     </div>
                     <div class="form-group">
                         <label>Route Finish</label>
-                        <select name="rute_finish" class="form-control" required>
-                        <option disabled selected value="">Choose One!</option>
-                        <?php
+                        <select name="rute_finish" class="form-control" id="rute_finish" required>
+                            <option disabled selected value="">Choose One!</option>
+                            <?php
                             include 'connection.php';
                             $query = mysqli_query($connect, 'SELECT * FROM street');
                             while ($data = mysqli_fetch_array($query)) { ?>
@@ -127,6 +127,12 @@ if (!isset($_SESSION['email'])) {
     <!-- Bootstrap core JavaScript-->
     <script src="assets/vendor/jquery/jquery.min.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#rute_start').select2();
+            $('#rute_finish').select2();
+        });
+    </script>
 
     <!-- Core plugin JavaScript-->
     <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
